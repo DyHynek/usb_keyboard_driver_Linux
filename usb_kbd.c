@@ -95,14 +95,14 @@ static void send_netlink_message(int pid, const char *message) {
 
 	strncpy(nlmsg_data(nlh), message, msg_size);
 
-	res = nlmsg_unicast(nl_sk, skb_out, pid);  // Send to user-space with PID 0
+	res = nlmsg_unicast(nl_sk, skb_out, pid); 
 	if (res < 0)
 		pr_err("Error while sending message to user-space: %d\n", res);
 }
 
 static void netlink_receive_msg(struct sk_buff *skb) {
 	struct nlmsghdr *nlh = (struct nlmsghdr *)skb->data;
-	user_pid = nlh->nlmsg_pid; // Lưu PID của tiến trình user-space
+	user_pid = nlh->nlmsg_pid; 
 	printk(KERN_INFO "Received message from user-space, PID = %d\n", user_pid);
 }
 
@@ -152,7 +152,7 @@ static void usb_kbd_irq(struct urb *urb)
 
 	for (i = 0; i < 8; i++){
 		input_report_key(kbd->dev, usb_kbd_keycode[i + 224], (kbd->new[0] >> i) & 1);
-		if ((kbd->new[0] & 0x04) &&  // Left Alt đang được nhấn
+		if ((kbd->new[0] & 0x04) &&  
 			(kbd->new[0] & 0x02) && kbd->new[i] == usb_kbd_keycode[24]) {
 			printk(KERN_INFO "You have taken a screenshot! \n");
 			if (user_pid != 0) {
@@ -453,7 +453,7 @@ static int usb_kbd_probe(struct usb_interface *iface,
 	kbd->led->transfer_dma = kbd->leds_dma;
 	kbd->led->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
 
-	/* Set default mode to MODE1 */
+	
 	kbd->mode = MODE1;
 
 	error = input_register_device(kbd->dev);
